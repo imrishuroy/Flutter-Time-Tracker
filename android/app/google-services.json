@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "484703433704",
+    "firebase_url": "https://time-ticker-6978f.firebaseio.com",
+    "project_id": "time-ticker-6978f",
+    "storage_bucket": "time-ticker-6978f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:484703433704:android:c6db3ffbb828f07dacea5d",
+        "android_client_info": {
+          "package_name": "com.sixteenbrains.time_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "484703433704-4mh04l0vk2j8j87597if7d7r2pjk1vo9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sixteenbrains.time_tracker",
+            "certificate_hash": "83586f7824a89d4ff72df320e6e963c36581424b"
+          }
+        },
+        {
+          "client_id": "484703433704-d2dt6c9b37guhqc75otu376ho4br36sn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyANPNzN9xUVFHwn9E98ahPR75MJeOU1YM8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "484703433704-d2dt6c9b37guhqc75otu376ho4br36sn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
