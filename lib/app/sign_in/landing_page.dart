@@ -4,18 +4,13 @@ import 'package:time_tracker/services/auth.dart';
 
 import '../home_page.dart';
 
-class LandingPage extends StatefulWidget {
+class LandingPage extends StatelessWidget {
   final AuthBase auth;
   LandingPage({@required this.auth});
 
-  @override
-  _LandingPageState createState() => _LandingPageState();
-}
-
-class _LandingPageState extends State<LandingPage> {
   // firebase user
   // User _user;
-
+/*
   AppUser _user;
 
   @override
@@ -44,23 +39,24 @@ class _LandingPageState extends State<LandingPage> {
       _user = user;
     });
   }
+*/
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: widget.auth.onAuthStateChanged,
+    return StreamBuilder<AppUser>(
+      stream: auth.onAuthStateChanged,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+        if (snapshot.connectionState == ConnectionState.active) {
           AppUser user = snapshot.data;
           if (user == null) {
             return SignInPage(
-              auth: widget.auth,
-              onSignIn: _updateUser,
+              auth: auth,
+              // onSignIn: _updateUser,
             );
           }
           return HomePage(
-            auth: widget.auth,
-            onSignOut: () => _updateUser(null),
+            auth: auth,
+            // onSignOut: () => _updateUser(null),
           );
         } else {
           return Scaffold(

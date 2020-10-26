@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:time_tracker/services/auth.dart';
 
 class HomePage extends StatelessWidget {
-  final VoidCallback onSignOut;
+  // final VoidCallback onSignOut;
   final AuthBase auth;
 
-  HomePage({@required this.auth, this.onSignOut});
+  HomePage({
+    @required this.auth,
+  });
 
   Future<void> _signOut() async {
     try {
       // await FirebaseAuth.instance.signOut();
       await auth.signOut();
-      onSignOut();
+      // onSignOut();
     } catch (error) {
       print(error);
     }
