@@ -32,6 +32,15 @@ class SignInPage extends StatelessWidget {
     }
   }
 
+  void _signInWithFacebok() async {
+    try {
+      await auth.signInWithFacebook();
+      // print('${authResult.user.uid}');
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,7 +86,7 @@ class SignInPage extends StatelessWidget {
             imageUrl: 'facebook',
             text: 'Sign In with Facebook',
             textColor: Colors.white,
-            onPressed: () {},
+            onPressed: _signInWithFacebok,
             color: Color(0xff334d92),
           ),
           SizedBox(

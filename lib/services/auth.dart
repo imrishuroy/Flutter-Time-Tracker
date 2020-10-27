@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 // dependencies injection
@@ -15,6 +16,7 @@ abstract class AuthBase {
   AppUser currentUser();
   Future<AppUser> signInAnonymously();
   Future<AppUser> signInWithGoogle();
+  Future<AppUser> signInWithFacebook();
   Future<void> signOut();
 }
 
@@ -68,6 +70,27 @@ class Auth implements AuthBase {
   }
 
   @override
+  Future<AppUser> signInWithFacebook() async {
+    final facebookLogin = FacebookLogin();
+    final result = await facebookLogin.logIn(
+      ['public_profile'],
+    );
+    if (result.accessToken != null) {
+      final authResult = await _firebaseAuth.signInWithCredential(
+        FacebookAuthProvider.credential(
+          result.accessToken.token,
+        ),
+      );
+      return _userFromFirebase(authResult.user);
+    } else {
+      throw PlatformException(
+        code: 'ERROR_ABORTED_BY_USER',
+        message: 'Sign In Aborted By User',
+      );
+    }
+  }
+
+  @override
   Future<AppUser> signInAnonymously() async {
     final authResult = await _firebaseAuth.signInAnonymously();
     return _userFromFirebase(authResult.user);
@@ -77,6 +100,8 @@ class Auth implements AuthBase {
   Future<void> signOut() async {
     final gooleSignIn = GoogleSignIn();
     await gooleSignIn.signOut();
+    final facebookLogin = FacebookLogin();
+    await facebookLogin.logOut();
     await _firebaseAuth.signOut();
   }
 }
