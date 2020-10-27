@@ -23,6 +23,15 @@ class SignInPage extends StatelessWidget {
     }
   }
 
+  void _signInWithGoogle() async {
+    try {
+      await auth.signInWithGoogle();
+      // print('${authResult.user.uid}');
+    } catch (error) {
+      print(error.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +67,7 @@ class SignInPage extends StatelessWidget {
             imageUrl: 'google',
             text: 'Sign In with google',
             textColor: Colors.black87,
-            onPressed: () {},
+            onPressed: _signInWithGoogle,
             color: Colors.white,
           ),
           SizedBox(
