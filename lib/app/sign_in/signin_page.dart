@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:time_tracker/app/sign_in/email_sigin_page.dart';
 import 'package:time_tracker/app/sign_in/sign_in_button.dart';
 import 'package:time_tracker/app/sign_in/social_sigin_button.dart';
 
@@ -41,6 +42,12 @@ class SignInPage extends StatelessWidget {
     }
   }
 
+  void _signInWithEmail(BuildContext context) {
+    // show sigin page
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (ctx) => EmailSigInPage(), fullscreenDialog: true));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,11 +56,11 @@ class SignInPage extends StatelessWidget {
         elevation: 2.0,
         title: Text('Time Tracker'),
       ),
-      body: _buildContents(),
+      body: _buildContents(context),
     );
   }
 
-  Padding _buildContents() {
+  Padding _buildContents(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Column(
@@ -95,7 +102,7 @@ class SignInPage extends StatelessWidget {
           SignInButton(
             text: 'Sign In with Email',
             textColor: Colors.white,
-            onPressed: () {},
+            onPressed: () => _signInWithEmail(context),
             color: Colors.teal[700],
           ),
           SizedBox(
