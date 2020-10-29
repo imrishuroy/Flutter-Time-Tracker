@@ -7,13 +7,16 @@ class EmailSigInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        shadowColor: Colors.grey[200],
         title: Text('SignIn'),
         elevation: 2.0,
-        backgroundColor: Colors.grey[200],
+        // backgroundColor: Colors.grey[200],
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Card(child: EmailSigInForm()),
+        child: Card(
+          child: EmailSigInForm(),
+        ),
       ),
     );
   }
