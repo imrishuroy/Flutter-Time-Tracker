@@ -1,17 +1,58 @@
 import 'package:flutter/material.dart';
 import 'package:time_tracker/widgets/form_submit_button.dart';
 
-class EmailSigInForm extends StatelessWidget {
+enum EmailSigInFormType { sigIn, register }
+
+class EmailSigInForm extends StatefulWidget {
+  // String email;
+
+  @override
+  _EmailSigInFormState createState() => _EmailSigInFormState();
+}
+
+class _EmailSigInFormState extends State<EmailSigInForm> {
+  final TextEditingController _emailController = TextEditingController();
+
+  final TextEditingController _passwordController = TextEditingController();
+
+  EmailSigInFormType _formType = EmailSigInFormType.sigIn;
+
+  void _submit() {
+    print(
+        'email : ${_emailController.text} , password: ${_passwordController.text}');
+  }
+
+  void _toggleFormType() {
+    setState(() {
+      _formType = _formType == EmailSigInFormType.sigIn
+          ? EmailSigInFormType.register
+          : EmailSigInFormType.sigIn;
+      _emailController.clear();
+      _passwordController.clear();
+    });
+  }
+
   List<Widget> _buildChildren() {
+    final primaryText =
+        _formType == EmailSigInFormType.sigIn ? 'Sign In' : 'Create an account';
+
+    final secondaryText = _formType == EmailSigInFormType.sigIn
+        ? 'Need an account? Register'
+        : 'Have an account? sign In';
     return [
       TextField(
+        controller: _emailController,
         decoration: InputDecoration(
           labelText: 'Email',
           hintText: 'Enter your email',
         ),
+        // onChanged: (value) {
+        //   email = value;
+        // },
       ),
       SizedBox(height: 10),
       TextField(
+        controller: _passwordController,
         obscureText: true,
         decoration: InputDecoration(
           labelText: 'Password',
@@ -20,13 +61,13 @@ class EmailSigInForm extends StatelessWidget {
       ),
       SizedBox(height: 10),
       FormSubmitButton(
-        text: 'Sign In',
-        onPressed: () {},
+        text: primaryText,
+        onPressed: _submit,
       ),
       FlatButton(
-        onPressed: () {},
+        onPressed: _toggleFormType,
         child: Text(
-          'Need an Account ? Register',
+          secondaryText,
           style: TextStyle(
             color: Colors.blue[700],
           ),
