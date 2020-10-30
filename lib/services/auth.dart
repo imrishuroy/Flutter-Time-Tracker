@@ -18,6 +18,8 @@ abstract class AuthBase {
   Future<AppUser> signInWithGoogle();
   Future<AppUser> signInWithFacebook();
   Future<void> signOut();
+  Future<AppUser> sigInWithEmailAndPassword(String email, String password);
+  Future<AppUser> createUserWithEmailAndPassword(String email, String password);
 }
 
 class Auth implements AuthBase {
@@ -88,6 +90,22 @@ class Auth implements AuthBase {
         message: 'Sign In Aborted By User',
       );
     }
+  }
+
+  @override
+  Future<AppUser> sigInWithEmailAndPassword(
+      String email, String password) async {
+    final authResult = await _firebaseAuth.signInWithEmailAndPassword(
+        email: email, password: password);
+    return _userFromFirebase(authResult.user);
+  }
+
+  @override
+  Future<AppUser> createUserWithEmailAndPassword(
+      String email, String password) async {
+    final authResult = await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
+    return _userFromFirebase(authResult.user);
   }
 
   @override

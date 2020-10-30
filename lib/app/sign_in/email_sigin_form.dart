@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:time_tracker/services/auth.dart';
 import 'package:time_tracker/widgets/form_submit_button.dart';
 
 enum EmailSigInFormType { sigIn, register }
 
 class EmailSigInForm extends StatefulWidget {
   // String email;
+  final AuthBase auth;
+  EmailSigInForm({@required this.auth});
 
   @override
   _EmailSigInFormState createState() => _EmailSigInFormState();
@@ -17,9 +20,24 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
 
   EmailSigInFormType _formType = EmailSigInFormType.sigIn;
 
-  void _submit() {
-    print(
-        'email : ${_emailController.text} , password: ${_passwordController.text}');
+  String get _email => _emailController.text;
+  String get _password {
+    return _passwordController.text;
+  }
+
+  void _submit() async {
+    // print(
+    //     'email : ${_emailController.text} , password: ${_passwordController.text}');
+    try {
+      if (_formType == EmailSigInFormType.sigIn) {
+        await widget.auth.sigInWithEmailAndPassword(_email, _password);
+      } else {
+        await widget.auth.createUserWithEmailAndPassword(_email, _password);
+      }
+      Navigator.of(context).pop();
+    } catch (error) {
+      print(error.toString());
+    }
   }
 
   void _toggleFormType() {
