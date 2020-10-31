@@ -15,11 +15,13 @@ class EmailSigInPage extends StatelessWidget {
         elevation: 2.0,
         // backgroundColor: Colors.grey[200],
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Card(
-          child: EmailSigInForm(
-            auth: auth,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Card(
+            child: EmailSigInForm(
+              auth: auth,
+            ),
           ),
         ),
       ),

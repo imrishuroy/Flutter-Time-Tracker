@@ -21,6 +21,8 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
   final FocusNode _passwordFocusNode = FocusNode();
 
   EmailSigInFormType _formType = EmailSigInFormType.sigIn;
+  bool _submitted = false;
+  bool _isLoading = false;
 
   String get _email => _emailController.text;
   String get _password {
@@ -30,7 +32,12 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
   void _submit() async {
     // print(
     //     'email : ${_emailController.text} , password: ${_passwordController.text}');
+    setState(() {
+      _submitted = true;
+      _isLoading = true;
+    });
     try {
+      //await Future.delayed(Duration(seconds: 5));
       if (_formType == EmailSigInFormType.sigIn) {
         await widget.auth.sigInWithEmailAndPassword(_email, _password);
       } else {
@@ -39,16 +46,25 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
       Navigator.of(context).pop();
     } catch (error) {
       print(error.toString());
+      // finally will run in both succuss and failure of our code.
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
   void _emailEditingComplete() {
     //  print('Email editing complete');
-    FocusScope.of(context).requestFocus(_passwordFocusNode);
+    final newFocus = widget.emailValidator.isValid(_email)
+        ? _passwordFocusNode
+        : _emailFocusNode;
+    FocusScope.of(context).requestFocus(newFocus);
   }
 
   void _toggleFormType() {
     setState(() {
+      _submitted = false;
       _formType = _formType == EmailSigInFormType.sigIn
           ? EmailSigInFormType.register
           : EmailSigInFormType.sigIn;
@@ -69,7 +85,8 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
     // bool submitEnabled = _email.isNotEmpty && _password.isNotEmpty;
 
     bool submitEnabled = widget.emailValidator.isValid(_email) &&
-        widget.passwordValidator.isValid(_password);
+        widget.passwordValidator.isValid(_password) &&
+        !_isLoading;
     return [
       _buildEmailTextField(),
       SizedBox(height: 10),
@@ -80,7 +97,7 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
         onPressed: submitEnabled ? _submit : null,
       ),
       FlatButton(
-        onPressed: _toggleFormType,
+        onPressed: !_isLoading ? _toggleFormType : null,
         child: Text(
           secondaryText,
           style: TextStyle(
@@ -92,7 +109,8 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
   }
 
   TextField _buildPasswordTextField() {
-    bool passwordValid = widget.emailValidator.isValid(_password);
+    bool showErrorText =
+        _submitted && !widget.emailValidator.isValid(_password);
     return TextField(
       controller: _passwordController,
       focusNode: _passwordFocusNode,
@@ -100,7 +118,8 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
       decoration: InputDecoration(
         labelText: 'Password',
         hintText: 'Enter your password',
-        errorText: passwordValid ? null : widget.invalidPasswordErrorText,
+        errorText: showErrorText ? widget.invalidPasswordErrorText : null,
+        enabled: _isLoading == false,
       ),
       textInputAction: TextInputAction.done,
       onEditingComplete: _submit,
@@ -109,15 +128,17 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
   }
 
   TextField _buildEmailTextField() {
-    bool emailValid = widget.emailValidator.isValid(_email);
+    bool showErrorText = _submitted && !widget.emailValidator.isValid(_email);
     return TextField(
       controller: _emailController,
       focusNode: _emailFocusNode,
       onEditingComplete: _emailEditingComplete,
       decoration: InputDecoration(
-          labelText: 'Email',
-          hintText: 'Enter your email',
-          errorText: emailValid ? null : widget.invalidEmailErrorText),
+        labelText: 'Email',
+        hintText: 'Enter your email',
+        errorText: showErrorText ? widget.invalidEmailErrorText : null,
+        enabled: _isLoading == false,
+      ),
       autocorrect: false,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
