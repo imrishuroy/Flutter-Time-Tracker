@@ -15,8 +15,9 @@ class EmailSigInForm extends StatefulWidget {
 
 class _EmailSigInFormState extends State<EmailSigInForm> {
   final TextEditingController _emailController = TextEditingController();
-
   final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
 
   EmailSigInFormType _formType = EmailSigInFormType.sigIn;
 
@@ -40,6 +41,11 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
     }
   }
 
+  void _emailEditingComplete() {
+    //  print('Email editing complete');
+    FocusScope.of(context).requestFocus(_passwordFocusNode);
+  }
+
   void _toggleFormType() {
     setState(() {
       _formType = _formType == EmailSigInFormType.sigIn
@@ -58,25 +64,9 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
         ? 'Need an account? Register'
         : 'Have an account? sign In';
     return [
-      TextField(
-        controller: _emailController,
-        decoration: InputDecoration(
-          labelText: 'Email',
-          hintText: 'Enter your email',
-        ),
-        // onChanged: (value) {
-        //   email = value;
-        // },
-      ),
+      _buildEmailTextField(),
       SizedBox(height: 10),
-      TextField(
-        controller: _passwordController,
-        obscureText: true,
-        decoration: InputDecoration(
-          labelText: 'Password',
-          hintText: 'Enter your password',
-        ),
-      ),
+      _buildPasswordTextField(),
       SizedBox(height: 10),
       FormSubmitButton(
         text: primaryText,
@@ -92,6 +82,38 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
         ),
       )
     ];
+  }
+
+  TextField _buildPasswordTextField() {
+    return TextField(
+      controller: _passwordController,
+      focusNode: _passwordFocusNode,
+      obscureText: true,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        hintText: 'Enter your password',
+      ),
+      textInputAction: TextInputAction.done,
+      onEditingComplete: _submit,
+    );
+  }
+
+  TextField _buildEmailTextField() {
+    return TextField(
+      controller: _emailController,
+      focusNode: _emailFocusNode,
+      onEditingComplete: _emailEditingComplete,
+      decoration: InputDecoration(
+        labelText: 'Email',
+        hintText: 'Enter your email',
+      ),
+      autocorrect: false,
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      // onChanged: (value) {
+      //   email = value;
+      // },
+    );
   }
 
   @override
