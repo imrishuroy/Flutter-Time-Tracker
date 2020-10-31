@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:time_tracker/app/sign_in/validator.dart';
 import 'package:time_tracker/services/auth.dart';
 import 'package:time_tracker/widgets/form_submit_button.dart';
 
 enum EmailSigInFormType { sigIn, register }
 
-class EmailSigInForm extends StatefulWidget {
+class EmailSigInForm extends StatefulWidget with EmailAndPasswordValidators {
   // String email;
   final AuthBase auth;
   EmailSigInForm({@required this.auth});
@@ -65,8 +66,10 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
         : 'Have an account? sign In';
 
 // aditional variable for enableing/disableing submit button
-    bool submitEnabled = _email.isNotEmpty && _password.isNotEmpty;
+    // bool submitEnabled = _email.isNotEmpty && _password.isNotEmpty;
 
+    bool submitEnabled = widget.emailValidator.isValid(_email) &&
+        widget.passwordValidator.isValid(_password);
     return [
       _buildEmailTextField(),
       SizedBox(height: 10),
@@ -89,6 +92,7 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
   }
 
   TextField _buildPasswordTextField() {
+    bool passwordValid = widget.emailValidator.isValid(_password);
     return TextField(
       controller: _passwordController,
       focusNode: _passwordFocusNode,
@@ -96,6 +100,7 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
       decoration: InputDecoration(
         labelText: 'Password',
         hintText: 'Enter your password',
+        errorText: passwordValid ? null : widget.invalidPasswordErrorText,
       ),
       textInputAction: TextInputAction.done,
       onEditingComplete: _submit,
@@ -104,14 +109,15 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
   }
 
   TextField _buildEmailTextField() {
+    bool emailValid = widget.emailValidator.isValid(_email);
     return TextField(
       controller: _emailController,
       focusNode: _emailFocusNode,
       onEditingComplete: _emailEditingComplete,
       decoration: InputDecoration(
-        labelText: 'Email',
-        hintText: 'Enter your email',
-      ),
+          labelText: 'Email',
+          hintText: 'Enter your email',
+          errorText: emailValid ? null : widget.invalidEmailErrorText),
       autocorrect: false,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
