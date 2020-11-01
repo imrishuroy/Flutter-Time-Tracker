@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:time_tracker/app/sign_in/validator.dart';
 import 'package:time_tracker/services/auth.dart';
 import 'package:time_tracker/widgets/form_submit_button.dart';
-import 'dart:io';
+
+import 'package:time_tracker/widgets/platform_alert_dialog.dart';
 
 enum EmailSigInFormType { sigIn, register }
 
@@ -48,23 +49,28 @@ class _EmailSigInFormState extends State<EmailSigInForm> {
     } catch (error) {
       //   print(error.toString());
 
-      Platform.isIOS
-          ? print('Ios')
-          : showDialog(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: Text('Sigin faliled'),
-                content: Text(error.toString()),
-                actions: [
-                  FlatButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text('OK'),
-                  )
-                ],
-              ),
-            );
+      // Platform.isIOS
+      //     ? print('Ios')
+      //     : showDialog(
+      //         context: context,
+      //         builder: (ctx) => AlertDialog(
+      //           title: Text('Sigin faliled'),
+      //           content: Text(error.toString()),
+      //           actions: [
+      //             FlatButton(
+      //               onPressed: () {
+      //                 Navigator.of(context).pop();
+      //               },
+      //               child: Text('OK'),
+      //             )
+      //           ],
+      //         ),
+      //       );
+      PlatFormAlertDialog(
+        title: 'Sigin in failed',
+        content: error.toString(),
+        defaultActionText: 'OK',
+      ).show(context);
       // finally will run in both succuss and failure of our code.
     } finally {
       setState(() {

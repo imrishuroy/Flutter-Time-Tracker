@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:time_tracker/widgets/platform_widget.dart';
@@ -6,6 +8,7 @@ class PlatFormAlertDialog extends PlatFormWidget {
   PlatFormAlertDialog({
     @override this.title,
     @override this.content,
+    this.cancelActionText,
     @override this.defaultActionText,
   })  : assert(title != null),
         assert(content != null),
@@ -13,13 +16,20 @@ class PlatFormAlertDialog extends PlatFormWidget {
 
   final String title;
   final String content;
+  final String cancelActionText;
   final String defaultActionText;
 
   Future<bool> show(BuildContext context) async {
-    return await showDialog<bool>(
-      context: context,
-      builder: (context) => this,
-    );
+    return Platform.isIOS
+        ? await showCupertinoDialog<bool>(
+            context: context,
+            builder: (ctx) => this,
+          )
+        : await showDialog<bool>(
+            context: context,
+            barrierDismissible: false,
+            builder: (context) => this,
+          );
   }
 
   @override
@@ -43,14 +53,26 @@ class PlatFormAlertDialog extends PlatFormWidget {
   }
 
   List<Widget> _buildActions(BuildContext context) {
-    return [
+    final actions = <Widget>[];
+    if (cancelActionText != null) {
+      actions.add(
+        PlatFormAlertDialogAction(
+          onPressed: () {
+            Navigator.of(context).pop(false);
+          },
+          child: Text(cancelActionText),
+        ),
+      );
+    }
+    actions.add(
       PlatFormAlertDialogAction(
         onPressed: () {
-          Navigator.of(context).pop();
+          Navigator.of(context).pop(true);
         },
         child: Text(defaultActionText),
-      )
-    ];
+      ),
+    );
+    return actions;
   }
 }
 
