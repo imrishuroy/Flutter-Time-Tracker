@@ -96,7 +96,7 @@ class PlatFormAlertDialogAction extends PlatFormWidget {
   @override
   Widget buildMaterialWidget(BuildContext context) {
     return FlatButton(
-      onPressed: () {},
+      onPressed: onPressed,
       child: child,
     );
   }
